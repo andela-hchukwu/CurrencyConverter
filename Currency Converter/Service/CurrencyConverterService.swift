@@ -20,15 +20,18 @@ class CurrencyConverterService {
             if response.result.error == nil {
                 guard let data = response.data else { return }
                 if let json = try? JSON(data: data) {
-                    let success = json["success"].stringValue
+                    let success = json["success"].boolValue
                     let timeStamp = json["timestamp"].int
                     let base = json["base"].stringValue
                     let date = json["date"].stringValue
                     let rates = json["rate"].dictionaryObject as? [String: Double]
 
-                    let conversion = Conversion(success: success, timestamp: timeStamp, base: base, date: date, rates: rates)
-
-                    completion(conversion, nil)
+                    if success {
+                        let conversion = Conversion(success: success, timestamp: timeStamp, base: base, date: date, rates: rates)
+                        completion(conversion, nil)
+                    } else {
+                        completion(nil, response.result.error)
+                    }
 
                 } else {
                     debugPrint(response.result.error as Any)

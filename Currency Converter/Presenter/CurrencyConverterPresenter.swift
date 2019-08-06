@@ -34,6 +34,8 @@ class CurrencyConverterPresenter {
             if error == nil {
                 guard let convertedData = conversion else { return }
                 self?.currencyConverterView?.setConversionData(convertedData)
+            } else {
+                self?.currencyConverterView?.setErrorFromConversion(error.debugDescription)
             }
         }
     }

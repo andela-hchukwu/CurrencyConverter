@@ -33,9 +33,14 @@ class CurrencyConverterVC: UIViewController {
 
     fileprivate let presenter = CurrencyConverterPresenter()
     fileprivate var activity: UIActivityIndicatorView?
+
+    fileprivate var targetCurrency = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(tap)
 
         presenter.attachView(self)
         setupView()
@@ -88,8 +93,13 @@ class CurrencyConverterVC: UIViewController {
 //        targetCurrencyFlag.image = UIImage(named: String(targetString))
     }
 
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
     @IBAction func convertBtnWasPressed(_ sender: Any) {
         guard let currency = targetCurrencyLabel.text else { return }
+        targetCurrency = currency
         presenter.getConversion(target: currency)
     }
 
@@ -121,10 +131,17 @@ extension CurrencyConverterVC: CurrencyConverterView {
 
     func setConversionData(_ convertedData: Conversion) {
         print(convertedData)
+        if let rate = convertedData.rates[targetCurrency] {
+            targetCurrencyTextField.text = "\(rate)"
+        }
     }
 
     func setErrorFromConversion(_ error: String) {
+        let alert = UIAlertController(title: "OOps!! Something went wrong.", message: error, preferredStyle: .alert)
 
+        let errorMessage = UIAlertAction(title: "Dismiss", style: .default)
+        alert.addAction(errorMessage)
+        present(alert, animated: true)
     }
 
 

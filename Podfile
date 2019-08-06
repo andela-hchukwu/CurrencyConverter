@@ -10,6 +10,7 @@ target 'Currency Converter' do
   pod 'SwiftyJSON', '~> 4.1.0'
   pod 'SnapKit', '~> 4.2.0'
   pod 'Charts'
+  pod 'ActionSheetPicker-3.0'
 
   target 'Currency ConverterTests' do
     inherit! :search_paths

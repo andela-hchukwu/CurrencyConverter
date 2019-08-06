@@ -9,26 +9,55 @@
 import XCTest
 @testable import Currency_Converter
 
+class CurrencyServiceMock: CurrencyConverterService {
+    fileprivate let conversion =  Conversion(success: true, timestamp: 1565093106, base: "EUR", date: "2019-08-06", rates: ["USD": 1.118593])
+//    let instance = CurrencyConverterService.instance.
+//    init(conversion: Conversion) {
+//        self.conversion = conversion
+//        super.init()
+//    }
+
+    override func getLatestConversion(targetCurrency: String, completion: @escaping (Conversion?, Error?) -> ()) {
+        completion(conversion, nil)
+    }
+
+}
+
+class CurrencyConversionViewMock : NSObject, CurrencyConverterView {
+
+    var setCurrencyConverted = false
+    var noCurrencyConverted = false
+
+    func setConversionData(_ convertedData: Conversion) {
+        setCurrencyConverted = true
+    }
+
+    func setErrorFromConversion(_ error: String) {
+        noCurrencyConverted = true
+    }
+
+    func startLoading() {
+    }
+
+    func finishLoading() {
+    }
+
+}
+
 class Currency_ConverterTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    func testShouldGetConversion() {
+        // given
+        let conversionViewMock = CurrencyConversionViewMock()
+        let presenterUnderTest = CurrencyConverterPresenter()
+        presenterUnderTest.attachView(conversionViewMock)
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        // when
+        presenterUnderTest.getConversion(target: "USD")
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+        // verify
+        XCTAssertTrue(conversionViewMock.setCurrencyConverted)
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
     }
 
 }

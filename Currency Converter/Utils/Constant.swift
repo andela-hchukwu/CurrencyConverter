@@ -8,5 +8,7 @@
 
 import Foundation
 
+// Fixer Api
+
 let BASE_API = "http://data.fixer.io/api/"
 let FIXER_ACCESS_KEY = "47cd18e3212b75eef39c95fde149af9e"
