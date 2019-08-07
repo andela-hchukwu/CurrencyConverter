@@ -8,6 +8,7 @@
 
 import UIKit
 import ActionSheetPicker_3_0
+import SwiftCharts
 
 class CurrencyConverterVC: UIViewController {
 
@@ -32,7 +33,14 @@ class CurrencyConverterVC: UIViewController {
     @IBOutlet weak var marketExchangeRateBtn: UIButton!
     @IBOutlet weak var marketExchangeHelpImageView: UIImageView!
     @IBOutlet weak var buttomUIView: UIView!
-
+    @IBOutlet weak var pastThirtyDaysLbl: UILabel!
+    @IBOutlet weak var thirtDaysGreenLbl: UILabel!
+    @IBOutlet weak var thirtdaysBtn: UIButton!
+    @IBOutlet weak var pastNinetyDaysLbl: UILabel!
+    @IBOutlet weak var ninetyDaysGreenLbl: UILabel!
+    @IBOutlet weak var ninetyDaysBtn: UIButton!
+    @IBOutlet weak var graphView: UIView!
+    
     fileprivate let presenter = CurrencyConverterPresenter()
     fileprivate var activity: UIActivityIndicatorView?
 
@@ -52,24 +60,17 @@ class CurrencyConverterVC: UIViewController {
     }
 
     private func setupView() {
-        roundedLabel.layer.cornerRadius = roundedLabel.frame.width / 2
-        roundedLabel.layer.masksToBounds = true
-        roundedLabel.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
-        roundedLabel.layer.shadowOffset = CGSize(width: 2, height: 2)
-        roundedLabel.layer.shadowOpacity = 0.8
-        marketExchangeHelpImageView.layer.cornerRadius = marketExchangeHelpImageView.frame.width / 2
-        marketExchangeHelpImageView.layer.masksToBounds = true
-        marketExchangeHelpImageView.layer.shadowColor = UIColor.black.withAlphaComponent(0.2).cgColor
-        marketExchangeHelpImageView.layer.shadowOffset = CGSize(width: 2, height: 2)
-        marketExchangeHelpImageView.layer.shadowOpacity = 0.8
+        roundedLabel.rounded()
+        thirtDaysGreenLbl.rounded()
+        ninetyDaysGreenLbl.rounded()
+        ninetyDaysGreenLbl.isHidden = true
+        pastNinetyDaysLbl.alpha = 0.4
+        thirtdaysBtn.isEnabled = false
+        marketExchangeHelpImageView.rounded()
         baseCurrencyView.layer.cornerRadius = 5
-        baseCurrencyButtomView.layer.cornerRadius = 3
-        baseCurrencyButtomView.layer.borderWidth = 1
-        baseCurrencyButtomView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        baseCurrencyButtomView.roundedCorner()
         targetCurrencyView.layer.cornerRadius = 5
-        targetCurrencyButtomView.layer.cornerRadius = 3
-        targetCurrencyButtomView.layer.borderWidth = 1
-        targetCurrencyButtomView.layer.borderColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        targetCurrencyButtomView.roundedCorner()
         convertButton.layer.cornerRadius = 5
         buttomUIView.layer.cornerRadius = 20
 
@@ -120,10 +121,22 @@ class CurrencyConverterVC: UIViewController {
         presenter.getConversion(target: currency)
     }
 
-    @IBAction func signUpBtnWasPressed(_ sender: Any) {
+    @IBAction func thirtyDaysBtnWasPressed(_ sender: Any) {
+        ninetyDaysGreenLbl.isHidden = true
+        thirtDaysGreenLbl.isHidden = false
+        pastNinetyDaysLbl.alpha = 0.4
+        pastThirtyDaysLbl.alpha = 1.0
+        thirtdaysBtn.isEnabled = false
+        ninetyDaysBtn.isEnabled = true
     }
 
-    @IBAction func toggleBtnWasPressed(_ sender: Any) {
+    @IBAction func ninetyDaysBtnWasPressed(_ sender: Any) {
+        ninetyDaysGreenLbl.isHidden = false
+        thirtDaysGreenLbl.isHidden = true
+        pastNinetyDaysLbl.alpha = 1.0
+        pastThirtyDaysLbl.alpha = 0.4
+        thirtdaysBtn.isEnabled = true
+        ninetyDaysBtn.isEnabled = false
     }
 
     @IBAction func baseCurrencyDropdownBtnWasPressed(_ sender: Any) {
@@ -201,9 +214,9 @@ extension CurrencyConverterVC: CurrencyConverterView {
     func setErrorFromConversion(_ error: String) {
         let alert = UIAlertController(title: "OOps!! Something went wrong.", message: error, preferredStyle: .alert)
 
-        let errorMessage = UIAlertAction(title: "Dismiss", style: .default)
+        let errorMessage = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
         alert.addAction(errorMessage)
-        present(alert, animated: true)
+        self.present(alert, animated: true)
     }
 
 

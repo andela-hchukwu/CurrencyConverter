@@ -15,7 +15,7 @@ class CurrencyConverterService {
     private init() {}
     static let instance = CurrencyConverterService()
 
-    func getLatestConversion(targetCurrency: String, completion: @escaping (Conversion?, Error?) -> ()) {
+    func getLatestConversion(targetCurrency: String, completion: @escaping (Conversion?, String?) -> ()) {
         Alamofire.request("\(BASE_API)latest?access_key=\(FIXER_ACCESS_KEY)&symbols=\(targetCurrency)&format=1", method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil).responseJSON { response in
             if response.result.error == nil {
                 guard let data = response.data else { return }
@@ -30,12 +30,13 @@ class CurrencyConverterService {
                         let conversion = Conversion(success: success, timestamp: timeStamp, base: base, date: date, rates: rates)
                         completion(conversion, nil)
                     } else {
-                        completion(nil, response.result.error)
+                        let errorMsg = json["error"]["info"].stringValue
+                        completion(nil, errorMsg)
                     }
 
                 } else {
                     debugPrint(response.result.error as Any)
-                    completion(nil, response.result.error)
+                    completion(nil, response.result.error.debugDescription)
                 }
                 
             }
