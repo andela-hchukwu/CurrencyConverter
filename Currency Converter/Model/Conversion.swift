@@ -8,10 +8,11 @@
 
 import Foundation
 
-struct Conversion: Decodable {
-    public private(set) var success: String!
+struct Conversion: Codable {
+    public private(set) var success: Bool!
     public private(set) var timestamp: Int!
     public private(set) var base: String!
     public private(set) var date: String!
     public private(set) var rates: [String: Double]!
 }
+

@@ -19,6 +19,8 @@
 		47443B0422F8D0DB00AB32D7 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47443B0322F8D0DB00AB32D7 /* Constant.swift */; };
 		47443B0622F8D6D600AB32D7 /* Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47443B0522F8D6D600AB32D7 /* Conversion.swift */; };
 		47443B0822F9B06400AB32D7 /* CurrencyConverterPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47443B0722F9B06400AB32D7 /* CurrencyConverterPresenter.swift */; };
+		47443B0A22FAB0D100AB32D7 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47443B0922FAB0D100AB32D7 /* CardView.swift */; };
+		47443B0D22FACB5000AB32D7 /* String+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47443B0C22FACB5000AB32D7 /* String+UIImage.swift */; };
 		9E6E01EC29CDA67E4F153DFD /* Pods_Currency_Converter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C886D06E253B11523A26D4DF /* Pods_Currency_Converter.framework */; };
 		D7CDC27E2A97C76340CCF081 /* Pods_Currency_ConverterTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6E25A7A1221A4F3430C574 /* Pods_Currency_ConverterTests.framework */; };
 /* End PBXBuildFile section */
@@ -62,6 +64,8 @@
 		47443B0322F8D0DB00AB32D7 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		47443B0522F8D6D600AB32D7 /* Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversion.swift; sourceTree = "<group>"; };
 		47443B0722F9B06400AB32D7 /* CurrencyConverterPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConverterPresenter.swift; sourceTree = "<group>"; };
+		47443B0922FAB0D100AB32D7 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		47443B0C22FACB5000AB32D7 /* String+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+UIImage.swift"; sourceTree = "<group>"; };
 		4DE11F445AEFD5CEF37DA7C8 /* Pods-Currency ConverterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Currency ConverterUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Currency ConverterUITests/Pods-Currency ConverterUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		613608BF2DB774BC12CDB35C /* Pods-Currency Converter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Currency Converter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Currency Converter/Pods-Currency Converter.debug.xcconfig"; sourceTree = "<group>"; };
 		A9F2C8F03C7C4D7169BFEC30 /* Pods-Currency ConverterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Currency ConverterTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Currency ConverterTests/Pods-Currency ConverterTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 		47443ACC22F85BA800AB32D7 /* Currency Converter */ = {
 			isa = PBXGroup;
 			children = (
+				47443B0B22FACB2400AB32D7 /* Extensions */,
 				47443B0222F8D0C900AB32D7 /* Utils */,
 				47443AFF22F8C98000AB32D7 /* View */,
 				47443AFE22F8C96C00AB32D7 /* Controller */,
@@ -213,6 +218,7 @@
 		47443AFF22F8C98000AB32D7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				47443B0922FAB0D100AB32D7 /* CardView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -223,6 +229,14 @@
 				47443B0322F8D0DB00AB32D7 /* Constant.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		47443B0B22FACB2400AB32D7 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				47443B0C22FACB5000AB32D7 /* String+UIImage.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -431,7 +445,9 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Currency Converter/Pods-Currency Converter-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ActionSheetPicker-3.0/ActionSheetPicker_3_0.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
@@ -439,7 +455,9 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActionSheetPicker_3_0.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
@@ -455,7 +473,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47443B0A22FAB0D100AB32D7 /* CardView.swift in Sources */,
 				47443AD022F85BA800AB32D7 /* CurrencyConverterVC.swift in Sources */,
+				47443B0D22FACB5000AB32D7 /* String+UIImage.swift in Sources */,
 				47443B0622F8D6D600AB32D7 /* Conversion.swift in Sources */,
 				47443ACE22F85BA800AB32D7 /* AppDelegate.swift in Sources */,
 				47443B0822F9B06400AB32D7 /* CurrencyConverterPresenter.swift in Sources */,
