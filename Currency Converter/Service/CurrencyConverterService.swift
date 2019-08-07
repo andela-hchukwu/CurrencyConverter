@@ -24,7 +24,7 @@ class CurrencyConverterService {
                     let timeStamp = json["timestamp"].int
                     let base = json["base"].stringValue
                     let date = json["date"].stringValue
-                    let rates = json["rate"].dictionaryObject as? [String: Double]
+                    let rates = json["rates"].dictionaryObject as? [String: Double]
 
                     if success {
                         let conversion = Conversion(success: success, timestamp: timeStamp, base: base, date: date, rates: rates)
