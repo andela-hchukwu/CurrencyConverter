@@ -8,7 +8,6 @@
 
 import UIKit
 import ActionSheetPicker_3_0
-import SwiftCharts
 import Charts
 
 class CurrencyConverterVC: UIViewController {
@@ -49,8 +48,6 @@ class CurrencyConverterVC: UIViewController {
 
     private var basePickerIsActive = false
     private var targetPickerIsActive = false
-
-    var chartView: LineChart?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,8 +114,11 @@ class CurrencyConverterVC: UIViewController {
 
     private func setupLineChart() {
 
+        var randomNumber = 3
+
         let values = (0...20).map { i -> ChartDataEntry in
             let val = Double(arc4random_uniform(UInt32(20)) + 3)
+            randomNumber = Int(val)
             return ChartDataEntry(x: Double(i), y: val)
         }
 
@@ -126,6 +126,8 @@ class CurrencyConverterVC: UIViewController {
         let gradientColors = [UIColor.cyan.cgColor, UIColor.clear.cgColor] // Colors of the gradient
         let colorLocations:[CGFloat] = [1.0, 0.0] // Positioning of the gradient
         let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: colorLocations) // Gradient Object
+        set1.drawCirclesEnabled = false
+        set1.drawValuesEnabled = false
         set1.fill = Fill.fillWithLinearGradient(gradient!, angle: 90.0) // Set the Gradient
 
         set1.fillAlpha = 1
@@ -134,6 +136,9 @@ class CurrencyConverterVC: UIViewController {
         let data = LineChartData(dataSet: set1)
 
         self.lineChartView.data = data
+        let set2 = LineChartDataSet(entries: [values[randomNumber]], label: "")
+//        let secondData = LineChartData(dataSet: set2)
+        lineChartView.lineData?.addDataSet(set2)
         lineChartView.chartDescription?.text = ""
         lineChartView.noDataText = "Loading Data"
         lineChartView.backgroundColor = UIColor.clear
@@ -202,7 +207,9 @@ class CurrencyConverterVC: UIViewController {
         self.lineChartView.addSubview(activity!)
         activity!.startAnimating()
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+        setupLineChart()
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
             // remove spinner if visible before adding again
             if self.activity?.tag == 27 {
                 self.activity?.stopAnimating()
@@ -236,7 +243,9 @@ class CurrencyConverterVC: UIViewController {
         self.lineChartView.addSubview(activity!)
         activity!.startAnimating()
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+        setupLineChart()
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
             // remove spinner if visible before adding again
             if self.activity?.tag == 27 {
                 self.activity?.stopAnimating()
@@ -294,6 +303,10 @@ class CurrencyConverterVC: UIViewController {
         setErrorFromConversion("You are currently on the free plan, please upgrade to enjoy this feature.", title: "Info")
     }
     
+}
+
+extension CurrencyConverterVC: ChartViewDelegate {
+
 }
 
 extension CurrencyConverterVC: CurrencyConverterView {

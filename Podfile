@@ -10,7 +10,6 @@ target 'Currency Converter' do
   pod 'SwiftyJSON', '~> 4.1.0'
   pod 'SnapKit', '~> 4.2.0'
   pod 'Charts'
-  pod 'SwiftCharts', '~> 0.6.1'
   pod 'ActionSheetPicker-3.0'
 
   target 'Currency ConverterTests' do
