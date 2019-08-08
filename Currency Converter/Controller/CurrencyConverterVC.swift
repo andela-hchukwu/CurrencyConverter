@@ -347,7 +347,16 @@ extension CurrencyConverterVC: CurrencyConverterView {
         if let conversion = convertedData.rates[targetCurrency], let amount = baseAmount {
             // multiply the exchage rate by the amount from the baseCurrency
             let rate = conversion * amount
-            targetCurrencyTextField.text = "\(rate)"
+            let roundedRate = Double(round(100 * rate) / 100)
+            if roundedRate == 0 {
+                targetCurrencyTextField.text = "0.00"
+            } else {
+                let formatter = NumberFormatter()
+                formatter.minimumFractionDigits = 2
+                formatter.minimum = 1
+                let value = formatter.string(from: NSNumber(value: roundedRate))
+                targetCurrencyTextField.text = value
+            }
         }
     }
 
