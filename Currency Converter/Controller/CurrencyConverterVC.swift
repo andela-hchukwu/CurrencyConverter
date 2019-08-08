@@ -9,11 +9,11 @@
 import UIKit
 import ActionSheetPicker_3_0
 import SwiftCharts
+import Charts
 
 class CurrencyConverterVC: UIViewController {
 
     @IBOutlet weak var topUIView: UIView!
-    @IBOutlet weak var signupButton: UIButton!
     @IBOutlet weak var roundedLabel: UILabel!
     @IBOutlet weak var baseCurrencyView: UIView!
     @IBOutlet weak var baseCurrencyTextField: UITextField!
@@ -39,16 +39,19 @@ class CurrencyConverterVC: UIViewController {
     @IBOutlet weak var pastNinetyDaysLbl: UILabel!
     @IBOutlet weak var ninetyDaysGreenLbl: UILabel!
     @IBOutlet weak var ninetyDaysBtn: UIButton!
-    @IBOutlet weak var graphView: UIView!
+    @IBOutlet weak var lineChartView: LineChartView!
     
     fileprivate let presenter = CurrencyConverterPresenter()
     fileprivate var activity: UIActivityIndicatorView?
 
     fileprivate var targetCurrency = ""
+    fileprivate var baseAmount: Double?
 
     private var basePickerIsActive = false
     private var targetPickerIsActive = false
-    
+
+    var chartView: LineChart?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -57,6 +60,7 @@ class CurrencyConverterVC: UIViewController {
 
         presenter.attachView(self)
         setupView()
+        setupLineChart()
     }
 
     private func setupView() {
@@ -111,12 +115,65 @@ class CurrencyConverterVC: UIViewController {
         return Unicode.Scalar(scalar.value + (0x1F1E6 - 0x61))!
     }
 
+    private func setupLineChart() {
+
+        let values = (0...20).map { i -> ChartDataEntry in
+            let val = Double(arc4random_uniform(UInt32(20)) + 3)
+            return ChartDataEntry(x: Double(i), y: val)
+        }
+
+        let set1 = LineChartDataSet(entries: values, label: "Exchange rate for the last 30 days")
+        let gradientColors = [UIColor.cyan.cgColor, UIColor.clear.cgColor] // Colors of the gradient
+        let colorLocations:[CGFloat] = [1.0, 0.0] // Positioning of the gradient
+        let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: gradientColors as CFArray, locations: colorLocations) // Gradient Object
+        set1.fill = Fill.fillWithLinearGradient(gradient!, angle: 90.0) // Set the Gradient
+
+        set1.fillAlpha = 1
+        set1.drawFilledEnabled = true // Draw the Gradient
+        set1.drawIconsEnabled = true
+        let data = LineChartData(dataSet: set1)
+
+        self.lineChartView.data = data
+        lineChartView.chartDescription?.text = ""
+        lineChartView.noDataText = "Loading Data"
+        lineChartView.backgroundColor = UIColor.clear
+
+        lineChartView.drawGridBackgroundEnabled = false
+        lineChartView.dragEnabled = true
+        lineChartView.rightAxis.enabled = false
+        lineChartView.leftAxis.enabled = true
+        lineChartView.doubleTapToZoomEnabled = false
+        lineChartView.legend.enabled = true
+        lineChartView.pinchZoomEnabled = true
+        lineChartView.highlightPerTapEnabled = true
+        lineChartView.highlightPerDragEnabled = false
+        lineChartView.highlightValue(nil, callDelegate: false)
+
+        lineChartView.xAxis.enabled = true
+        lineChartView.xAxis.drawGridLinesEnabled = false
+        lineChartView.xAxis.labelPosition = .bottom
+        lineChartView.leftAxis.drawAxisLineEnabled = true
+        lineChartView.leftAxis.drawGridLinesEnabled = false
+        lineChartView.leftAxis.labelCount = 5
+        lineChartView.leftAxis.forceLabelsEnabled = true
+
+    }
+
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
 
     @IBAction func convertBtnWasPressed(_ sender: Any) {
-        guard let currency = targetCurrencyLabel.text else { return }
+        guard let currency = targetCurrencyLabel.text,
+            baseCurrencyTextField.text != nil,
+            baseCurrencyTextField.text != ""
+                else {
+                    setErrorFromConversion("Type in a number to get it's equivalent in your preferred currency.", title: "Textfield cannot be empty")
+                    return
+        }
+        if let amount = baseCurrencyTextField.text {
+            baseAmount = Double(amount)
+        }
         targetCurrency = currency
         presenter.getConversion(target: currency)
     }
@@ -128,6 +185,31 @@ class CurrencyConverterVC: UIViewController {
         pastThirtyDaysLbl.alpha = 1.0
         thirtdaysBtn.isEnabled = false
         ninetyDaysBtn.isEnabled = true
+
+        // remove spinner if visible before adding again
+        if activity?.tag == 27 {
+            activity?.stopAnimating()
+            activity?.isHidden = true
+        }
+
+        // Show activity indicator
+        activity = UIActivityIndicatorView()
+        activity?.color = UIColor.white
+        activity?.center = self.lineChartView.center
+        activity?.bounds = self.lineChartView.bounds
+        activity?.backgroundColor = UIColor.clear
+        activity?.tag = 27
+        self.lineChartView.addSubview(activity!)
+        activity!.startAnimating()
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            // remove spinner if visible before adding again
+            if self.activity?.tag == 27 {
+                self.activity?.stopAnimating()
+                self.activity?.isHidden = true
+            }
+        }
+
     }
 
     @IBAction func ninetyDaysBtnWasPressed(_ sender: Any) {
@@ -137,6 +219,30 @@ class CurrencyConverterVC: UIViewController {
         pastThirtyDaysLbl.alpha = 0.4
         thirtdaysBtn.isEnabled = true
         ninetyDaysBtn.isEnabled = false
+
+        // remove spinner if visible before adding again
+        if activity?.tag == 27 {
+            activity?.stopAnimating()
+            activity?.isHidden = true
+        }
+
+        // Show activity indicator
+        activity = UIActivityIndicatorView()
+        activity?.color = UIColor.white
+        activity?.center = self.lineChartView.center
+        activity?.bounds = self.lineChartView.bounds
+        activity?.backgroundColor = UIColor.clear
+        activity?.tag = 27
+        self.lineChartView.addSubview(activity!)
+        activity!.startAnimating()
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            // remove spinner if visible before adding again
+            if self.activity?.tag == 27 {
+                self.activity?.stopAnimating()
+                self.activity?.isHidden = true
+            }
+        }
     }
 
     @IBAction func baseCurrencyDropdownBtnWasPressed(_ sender: Any) {
@@ -184,6 +290,10 @@ class CurrencyConverterVC: UIViewController {
             }, origin: self.targetCurrencyDrpdownButton)
         }
     }
+    @IBAction func exchangeRateBtnWasPressed(_ sender: Any) {
+        setErrorFromConversion("You are currently on the free plan, please upgrade to enjoy this feature.", title: "Info")
+    }
+    
 }
 
 extension CurrencyConverterVC: CurrencyConverterView {
@@ -205,14 +315,15 @@ extension CurrencyConverterVC: CurrencyConverterView {
     }
 
     func setConversionData(_ convertedData: Conversion) {
-        print(convertedData)
-        if let rate = convertedData.rates[targetCurrency] {
+        if let conversion = convertedData.rates[targetCurrency], let amount = baseAmount {
+            // multiply the exchage rate by the amount from the baseCurrency
+            let rate = conversion * amount
             targetCurrencyTextField.text = "\(rate)"
         }
     }
 
-    func setErrorFromConversion(_ error: String) {
-        let alert = UIAlertController(title: "OOps!! Something went wrong.", message: error, preferredStyle: .alert)
+    func setErrorFromConversion(_ error: String, title: String) {
+        let alert = UIAlertController(title: title, message: error, preferredStyle: .alert)
 
         let errorMessage = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
         alert.addAction(errorMessage)

@@ -36,9 +36,12 @@ class CurrencyConverterService {
 
                 } else {
                     debugPrint(response.result.error as Any)
-                    completion(nil, response.result.error.debugDescription)
+                    completion(nil, response.result.error?.localizedDescription)
                 }
                 
+            } else {
+                debugPrint(response.result.error as Any)
+                completion(nil, response.result.error?.localizedDescription)
             }
         }
 
