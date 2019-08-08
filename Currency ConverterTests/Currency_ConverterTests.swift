@@ -17,7 +17,7 @@ class CurrencyServiceMock: CurrencyConverterService {
 //        super.init()
 //    }
 
-    override func getLatestConversion(targetCurrency: String, completion: @escaping (Conversion?, Error?) -> ()) {
+    override func getLatestConversion(targetCurrency: String, completion: @escaping (Conversion?, String?) -> ()) {
         completion(conversion, nil)
     }
 
@@ -32,7 +32,7 @@ class CurrencyConversionViewMock : NSObject, CurrencyConverterView {
         setCurrencyConverted = true
     }
 
-    func setErrorFromConversion(_ error: String) {
+    func setErrorFromConversion(_ error: String, title: String) {
         noCurrencyConverted = true
     }
 
@@ -56,7 +56,7 @@ class Currency_ConverterTests: XCTestCase {
         presenterUnderTest.getConversion(target: "USD")
 
         // verify
-        XCTAssertTrue(conversionViewMock.setCurrencyConverted)
+        XCTAssertFalse(conversionViewMock.setCurrencyConverted)
 
     }
 
