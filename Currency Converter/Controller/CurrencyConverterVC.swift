@@ -46,6 +46,8 @@ class CurrencyConverterVC: UIViewController {
     fileprivate var targetCurrency = ""
     fileprivate var baseAmount: Double?
 
+//    fileprivate let markerView = MarkerView()
+
     private var basePickerIsActive = false
     private var targetPickerIsActive = false
 
@@ -58,6 +60,7 @@ class CurrencyConverterVC: UIViewController {
         presenter.attachView(self)
         setupView()
         setupLineChart()
+
     }
 
     private func setupView() {
@@ -117,9 +120,9 @@ class CurrencyConverterVC: UIViewController {
         var randomNumber = 3
 
         let values = (0...20).map { i -> ChartDataEntry in
-            let val = Double(arc4random_uniform(UInt32(20)) + 3)
+            let val = Double(arc4random_uniform(UInt32(20)))
             randomNumber = Int(val)
-            return ChartDataEntry(x: Double(i), y: val)
+            return ChartDataEntry(x: Double(i), y: (val + 3))
         }
 
         let set1 = LineChartDataSet(entries: values, label: "Exchange rate for the last 30 days")
@@ -161,8 +164,21 @@ class CurrencyConverterVC: UIViewController {
         lineChartView.leftAxis.drawGridLinesEnabled = false
         lineChartView.leftAxis.labelCount = 5
         lineChartView.leftAxis.forceLabelsEnabled = true
+        lineChartView.delegate = self
 
     }
+
+//    func chartValueSelected(chartView: ChartViewBase, dataSetIndex: Int, highlight: Highlight) {
+//
+//        let graphPoint = chartView.getMarkerPosition(highlight: highlight)
+//
+//        // Adding top marker
+//        markerView.dateLabel.text = "8 Aug"
+//        markerView.exchangeRateLabel.text = "1 EUR - 4.12347"
+//        markerView.center = CGPoint(x: graphPoint.x, y: markerView.center.y)
+//        markerView.isHidden = false
+//
+//    }
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
